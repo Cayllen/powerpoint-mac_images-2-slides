@@ -3,10 +3,13 @@ from tkinter import filedialog
 import os
 from pptx import Presentation
 from PIL import Image
+from pptx.util import Inches,Pt
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+
 
 root = tk.Tk()
 root.withdraw()
-file_paths = filedialog.askopenfilenames(title="Select photos", filetypes=[("Image files", "*.png *.jpg *.jpeg *.JPG *.PNG *.JPEG")])  # ("Video files", "*.mp4 *.mov *.MOV *.MP4")
+file_paths = filedialog.askopenfilenames(title="Select photos", filetypes=[("Image files", "*.png *.jpg *.jpeg *.JPG *.PNG *.JPEG"),("Video files", "*.mp4 *.mov *.MOV *.MP4")])  #
 
 
 # Create a new PowerPoint presentation
@@ -16,6 +19,8 @@ slide = prs.slides.add_slide(prs.slide_layouts[0])
 # Insert each photo or video on a new slide
 for file_path in file_paths:
     # Get the file extension
+    file_name = os.path.splitext(file_path)[0].split("/")[-1]
+    print(file_name)
     file_ext = os.path.splitext(file_path)[1].lower()
     rotate = False
 
@@ -58,7 +63,7 @@ for file_path in file_paths:
 
 
     # VIDEO IS NOT WORKING PROPERLY
-    # elif file_ext in ('.mp4', '.mov' ):
+    elif file_ext in ('.mp4', '.mov' ):
     #     from videoprops import get_video_properties
     #     import cv2
     #     # Import everything needed to edit video clips
@@ -71,7 +76,17 @@ for file_path in file_paths:
     #     print(type(image))
     #     print(success)
     #     # Insert the video on a new slide
-    #     slide = prs.slides.add_slide(prs.slide_layouts[10])
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        textbox = slide.shapes.add_textbox(Inches(2), Inches(2), Inches(6), Inches(4))
+        text_frame = textbox.text_frame
+        text_frame.text = file_name
+        paragraph = text_frame.paragraphs[0]
+        paragraph.font.size = Inches(1)
+
+
+
+
+
     #     pic = slide.shapes.add_movie(file_path, top=0,left=0, width=Pt(0.75*props['width']), height=Pt(0.75*props['height']),poster_frame_image=image)
     #
     #     if props['width'] < props['height']:
